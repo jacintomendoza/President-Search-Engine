@@ -1,0 +1,35 @@
+CSE4334 Data Mining
+Spring 2021
+Programming Assignment 1 (P1) grading rubrics:
+
+Your program will be evaluated using the following criteria: 
+
+(1) Correctness (75 Points)
+
+We will evaluate your code by calling the functions specificed in the P1_guidelines.ipynb file (getidf - 20 points; getweight - 25 points; query - 30 points). So, make sure to use the same function names, parameter names/types/orders as specified above. We will use the above test cases and other queries and tokens to test your program.
+
+* getidf(token): return the inverse document frequency of a token. If the token doesn't exist in the corpus, return -1. The parameter 'token' is already stemmed. (It means you should not perform stemming inside this function.) Note the differences between getidf("hispan") and getidf("hispanic"). 
+
+* getweight(filename,token): return the TF-IDF weight of a token in the document named 'filename'. If the token doesn't exist in the document, return 0. The parameter 'token' is already stemmed. (It means you should not perform stemming inside this function.) Note that both getweight("1960-10-21.txt","reason") and getweight("2012-10-16.txt","hispanic") return 0, but for different reasons. 
+
+*query(qstring): return a tuple in the form of (filename of the document, score), where the document is the query answer with respect to "qstring" . If no document contains any token in the query, return ("None",0). If we need more than 10 elements from each posting list, return ("fetch more",0).
+
+We will use a script to automatically grade your code. So, make sure to use the same function names, parameter names/types/orders as specified above. 
+
+(2) Efficiency(15 points)
+We will run the codes of all students to get a median speed as reference. We will assign more points to faster programs. 
+
+1st tier : 15 points.
+2nd tier : 10 points
+3rd tier : 5 points.
+Extremely slow or not doing anything meaningful: 0 points. 
+
+(3) Quality (Clarity, organization, modularity, documentation) :10 points
+Follow good coding standards to make your program easy to understand by others and easy to maintain/extend.
+
+High mark  : 10 points
+Medium mark : 5 points
+Low mark : 0 points
+
+Your score will be calculated from the individual break-ups using the following equation:
+(Correctness * .75) + (Efficiency * .15) + (Quality * .10)
