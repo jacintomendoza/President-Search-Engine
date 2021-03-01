@@ -12,6 +12,7 @@ df = Counter()
 tf_doc = {}
 tf_idf_vec = {}
 d_len = Counter()
+
 for filename in os.listdir(corpusroot):
     file = open(os.path.join(corpusroot, filename), "r", encoding='UTF-8')
     doc = file.read()
@@ -40,18 +41,22 @@ def getidf(term):                                  # idf = log10(N/df)
         return -1                                  # N = total num of documents
     return math.log10(len(tf_doc)/df[term])
 
-# Idf vector calulation
+# Tf-Idf vector calulation - not normalized
 for filename in tf_doc:
     tf_idf_vec[filename] = Counter()
     length = 0
     for term in tf_doc[filename]:
-        weight = (1 + math.log10(tf_doc[filename][term]))*getidf(term)
-        tf_idf_vec[filename][term] = weight
-        length += weight**2
+        weight = (1 + math.log10(tf_doc[filename][term]))*getidf(term)  # Weight formula = (1 + log10(tf_td))(idf)
+        tf_idf_vec[filename][term] = weight                             # tf_td = number occurences of term, t, in document, d
+        length += pow(weight,4)
     d_len[filename] = math.sqrt(length)
+# Td-Idf vectors - normalized
+for filename in tf_idf_vec:
+    for term in tf_idf_vec[filename]:
+        tf_idf_vec[filename][term] = tf_idf_vec[filename][term] / d_len[filename]      #dividing weights by the document's length
 
-def getweight(document, term):                      # Weight formula = (1 + log10(tf_td))(idf)
-    return tf_idf_vec[document][term]               # tf_td = number occurences of term, t, in document, d
+def getweight(filename, term):
+    return tf_idf_vec[filename][term]
 
 ########################################################
 # T E S T E R S
@@ -63,7 +68,7 @@ print("%.12f" % getidf("reason"))               # 0.000000000000
 print("%.12f" % getidf("hispan"))               # 0.632023214705
 print("%.12f" % getidf("hispanic"))             # -1.000000000000
 # g e t w e i g h t
-print("%.12f" % getweight("2012-10-03.txt","health"))       # 0.008528366190
+print("\n%.12f" % getweight("2012-10-03.txt","health"))       # 0.008528366190
 print("%.12f" % getweight("1960-10-21.txt","reason"))       # 0.000000000000
 print("%.12f" % getweight("1976-10-22.txt","agenda"))       # 0.012683891289
 print("%.12f" % getweight("2012-10-16.txt","hispan"))       # 0.023489163449
