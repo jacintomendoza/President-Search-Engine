@@ -8,10 +8,10 @@ from nltk.stem.porter import PorterStemmer
 import math
 stemmer = PorterStemmer()
 corpusroot = './presidential_debates'
-df = Counter()
-tf_doc = {}
-tf_idf_vec = {}
-d_len = Counter()
+df = Counter()                  # document frequency
+tf_doc = {}                     # term frequency document
+tf_idf_vec = {}                 # TF-IDF vector weights, W_td
+d_len = Counter()               # document length
 
 for filename in os.listdir(corpusroot):
     file = open(os.path.join(corpusroot, filename), "r", encoding='UTF-8')
@@ -34,8 +34,8 @@ for filename in os.listdir(corpusroot):
     df += Counter(list(set(stemed_tokens)))
     tf_doc[filename] = tf.copy()
     tf.clear()
-########################################################
 
+########################################################
 def getidf(term):                                  # idf = log10(N/df)
     if df[term] == 0:                              # df = num of docs term occurs in
         return -1                                  # N = total num of documents
@@ -47,8 +47,20 @@ def getweight(filename, term):
 def getlen(filename):
     return d_len[filename]
 
-def query():
+def query(input):
+    input = input.lower()                   # (6) "Remember to convert it to lower case"
+    cosine_similarity = Counter()
+    postings_list = {}                      # form of (document d, TF-IDF weight w)
+    # 7.1 Here ###############
+    ##########################
+    #########################
+    for token in input:
+        if token not in postings_list:
+            continue                        # (7.2) If the token doesn't exist in the corpus, ignore it.
+                                            # (7.2) If the token doesn't exist in the corpus, ignore it.
+    return "None", 0
 
+########################################################
 # Tf-Idf vector calulation - not normalized
 for filename in tf_doc:
     tf_idf_vec[filename] = Counter()
@@ -86,7 +98,7 @@ print("%.12f" % getweight("1976-10-22.txt","agenda"))         # 0.012683891289
 print("%.12f" % getweight("2012-10-16.txt","hispan"))         # 0.023489163449
 print("%.12f" % getweight("2012-10-16.txt","hispanic"))       # 0.000000000000
 # q u e r y
-print("(%s, %.12f)" % query("health insurance wall street"))        # (2012-10-03.txt, 0.033877975254)
+print("\n(%s, %.12f)" % query("health insurance wall street"))        # (2012-10-03.txt, 0.033877975254)
 print("(%s, %.12f)" % query("particular constitutional amendment")) # (fetch more, 0.000000000000)
 print("(%s, %.12f)" % query("terror attack"))                       # (2004-09-30.txt, 0.026893338131)
 print("(%s, %.12f)" % query("vector entropy"))                      # (None, 0.000000000000)
